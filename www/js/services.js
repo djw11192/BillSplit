@@ -1,5 +1,6 @@
 angular.module('starter.services', [])
 .factory('CameraFactory', ['$http', CameraFactory])
+.factory('UsersFactory', UsersFactory)
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
@@ -81,6 +82,15 @@ function CameraFactory($http){
       dataType: 'form/multipart',
     }
     return $http(config);
+  }
+}
+
+function UsersFactory(){
+  var users = []
+  return {
+    all: function(){
+      return users
+    }
   }
 }
 
