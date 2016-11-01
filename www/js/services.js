@@ -1,5 +1,5 @@
 angular.module('starter.services', [])
-
+.factory('CameraFactory', ['$http', CameraFactory])
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
@@ -48,3 +48,49 @@ angular.module('starter.services', [])
     }
   };
 });
+
+
+function CameraFactory($http){
+  return {
+    create: create
+  }
+
+  function create(){
+    var formData = {
+      apikey: "0440982bcc88957",
+      language: "eng",
+      isOverlayRequired: true,
+      url: "https://farm3.staticflickr.com/2711/4107907629_d8223e930d.jpg"
+    }
+
+      var theData = "url=https://farm3.staticflickr.com/2711/4107907629_d8223e930d.jpg";
+      theData += "language=eng"
+      theData += "apikey=0440982bcc88957"
+
+    var config ={
+      url: 'https://api.ocr.space/parse/image',
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      transformRequest: function(obj) {
+          var str = [];
+          for(var p in obj)
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+          return str.join("&");
+      },
+      data: formData,
+      dataType: 'form/multipart',
+    }
+    return $http(config);
+  }
+}
+
+//Prepare form data
+  // var formData = new FormData();
+  // // formData.append
+  // //     ("file", fileToUpload);
+  //
+  // formData.append("url", "https://farm4.staticflickr.com/3627/3331376675_0d1596dc25_z.jpg");
+  // formData.append("language" , "eng");
+  // formData.append("apikey", "0440982bcc88957");
+  //
+  // formData.append("isOverlayRequired", true);

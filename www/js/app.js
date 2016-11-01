@@ -77,6 +77,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'AccountCtrl'
       }
     }
+  })
+
+  .state('tab.camera', {
+    url: '/camera',
+    views: {
+      'tab-camera': {
+        templateUrl: 'templates/tab-camera.html',
+        controller: 'CameraCtrl as cc'
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback

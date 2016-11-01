@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
+.controller('CameraCtrl', CameraCtrl)
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
@@ -25,4 +26,34 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
-});
+})
+
+function CameraCtrl($scope, $stateParams, CameraFactory){
+  var vm = this
+  console.log("CameraCtrl")
+
+  vm.getPic = function(){
+    console.log("getting pic")
+    CameraFactory.create()
+      .then(function(data){
+        // console.log(data.data.ParsedResults[0].TextOverlay.Lines)
+        var allWords = []
+        vm.singleWords =[]
+        var lines = data.data.ParsedResults[0].TextOverlay.Lines
+        lines.forEach(function(line){
+          allWords.push(line.Words)
+        })
+        allWords.forEach(function(l){
+          l.forEach(function(attributes){
+            vm.singleWords.push(attributes)
+          })
+        })
+        console.log(vm.singleWords)
+      },
+      function(err){
+        console.log(err)
+      }
+    )
+
+  }
+}
