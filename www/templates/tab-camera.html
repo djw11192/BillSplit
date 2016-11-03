@@ -1,11 +1,21 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
+    <!-- angular $watch on this value, to trigger file upload... -->
+    <input type="file" ng-model="cc.files" file-change="cc.fileInputChanged($event, cc.files)">
     <h2 class="text-center">Upload your Receipt</h2>
+    {{ cc.uploadedPhotoUrl }}
 
-    <img id="myImage" ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
-    <img ng-show="imgURI === undefined" ng-src="http://placehold.it/300x300">
+    <!-- <img id="myImage" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}"> -->
+    <!-- <img ng-hide="{{cc.uploadedPhotoUrl}}" ng-src="http://placehold.it/300x300"> -->
     <button class="button" ng-click="takePicture()">Take Picture</button>
     <p ng-show="imgURI !== undefined">{{imgURI}}</p>
+    <p ng-show="imgURI !== undefined">{{data}}</p>
+    <h2 ng-if="users[cc.counter]">What did {{users[cc.counter].name}} Order?</h2>
+
+    <p ng-if="users[cc.counter]">{{users[cc.counter].owes}}</p>
+    <button ng-show="users[cc.counter]" ng-click="cc.nextUser()">Next</button>
+    <button ng-hide="users[cc.counter]" ui-sref="tab.total">Continue</button>
+
 
 
     <form class="form" ng-submit="cc.getPic()">
@@ -19,12 +29,16 @@
     </div>
   </form>
 
+  <input type="text" id="avatar-url">
+
   <div class="picContainer text-center">
     <div class="receiptContent">
-      <img class="receiptImg" ng-src="https://farm3.staticflickr.com/2711/4107907629_d8223e930d.jpg" class="receipt">
-      <span ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
+      <img id="myImage"class="receiptImg" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}" class="receipt" id="preview">
+      <span ng-click="cc.addPriceToUser({{word}})" ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
   </div>
 </div>
+
+
 
 
   </ion-content>

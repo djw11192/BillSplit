@@ -53,18 +53,19 @@ angular.module('starter.services', [])
 
 function CameraFactory($http){
   return {
-    create: create
+    create: create,
+    getAws: getAws
   }
 
-  function create(){
+  function create(url){
     var formData = {
       apikey: "0440982bcc88957",
       language: "eng",
       isOverlayRequired: true,
-      url: "https://farm3.staticflickr.com/2711/4107907629_d8223e930d.jpg"
+      url: url
     }
 
-      var theData = "url=https://farm3.staticflickr.com/2711/4107907629_d8223e930d.jpg";
+      var theData = "url=" + url;
       theData += "language=eng"
       theData += "apikey=0440982bcc88957"
 
@@ -82,6 +83,12 @@ function CameraFactory($http){
       dataType: 'form/multipart',
     }
     return $http(config);
+  }
+
+  function getAws(fileBlob){
+    // alert(fileBlob)
+    $http.post('https://mighty-scrubland-13529.herokuapp.com/api/test', {file: fileBlob})
+    $http.get('https://mighty-scrubland-13529.herokuapp.com/api/test')
   }
 }
 

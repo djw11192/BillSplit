@@ -21,3 +21,6 @@ span{
   background: white;
   color: red;
 }
+#myImage {
+  max-width: 100%
+}

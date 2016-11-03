@@ -3,6 +3,7 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope) {})
 .controller('CameraCtrl', CameraCtrl)
 .controller('UsersCtrl', UsersCtrl)
+.controller('TotalCtrl', TotalCtrl)
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
@@ -29,91 +30,87 @@ angular.module('starter.controllers', [])
   };
 })
 
-function CameraCtrl($scope, $cordovaCamera, CameraFactory){
+function CameraCtrl($scope, $rootScope, $cordovaCamera, CameraFactory){
   var vm = this
+
+  /////////Counter for users//////
+  vm.counter = 0
+
+  vm.nextUser = function(){
+    vm.counter+=1
+  }
+  var file;
   console.log("CameraCtrl")
 
+  vm.fileInputChanged = function(evt, files) {
+    var files = evt.target.files;
+    file = files[0];
+
+    console.log(file)
+
+    if(file == null){
+      return alert('No file selected.');
+    }
+    vm.getSignedRequest(file);
+  }
+
+
+  vm.getSignedRequest = function(file){
+   var xhr = new XMLHttpRequest();
+   xhr.open('GET', `https://mighty-scrubland-13529.herokuapp.com/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+   xhr.onreadystatechange = () => {
+     if(xhr.readyState === 4){
+       if(xhr.status === 200){
+         var response = JSON.parse(xhr.responseText);
+         console.log(response);
+         vm.uploadFile(file, response.signedRequest, response.url);
+       }
+       else{
+         alert('Could not get signed URL.');
+       }
+     }
+   };
+   xhr.send();
+ }
+ vm.uploadFile = function(file, signedRequest, url){
+   var xhr = new XMLHttpRequest();
+   xhr.open('PUT', signedRequest);
+   xhr.onreadystatechange = () => {
+     if(xhr.readyState === 4){
+       if(xhr.status === 200){
+         vm.uploadedPhotoUrl = url
+         $scope.$apply()
+         CameraFactory.create(vm.uploadedPhotoUrl)
+           .then(function(data){
+             // console.log(data.data.ParsedResults[0].TextOverlay.Lines)
+             var allWords = []
+             vm.singleWords =[]
+             var lines = data.data.ParsedResults[0].TextOverlay.Lines
+             lines.forEach(function(line){
+               allWords.push(line.Words)
+             })
+             allWords.forEach(function(l){
+               l.forEach(function(attributes){
+                 vm.singleWords.push(attributes)
+               })
+             })
+             console.log(vm.singleWords)
+             alert(vm.singleWords[0].WordText)
+           },
+           function(err){
+             console.log(err)
+           }
+         )
+       }
+       else{
+         alert('Could not upload file.');
+       }
+     }
+   };
+   xhr.send(file);
+ }
+
 //Cordova camera plugin
-
-
-
-//tutorial on changing file format
-
-
-
-// $scope.images = [];
-//
-// $scope.takePicture = function() {
-// 	// 2
-// 	var options = {
-// 		destinationType : Camera.DestinationType.FILE_URI,
-// 		sourceType : Camera.PictureSourceType.CAMERA, // Camera.PictureSourceType.PHOTOLIBRARY
-// 		allowEdit : false,
-// 		encodingType: Camera.EncodingType.JPEG,
-// 		popoverOptions: CameraPopoverOptions,
-// 	};
-//
-// 	// 3
-// 	$cordovaCamera.getPicture(options).then(function(imageData) {
-//
-// 		// 4
-// 		onImageSuccess(imageData);
-//
-// 		function onImageSuccess(fileURI) {
-// 			createFileEntry(fileURI);
-// 		}
-//
-// 		function createFileEntry(fileURI) {
-// 			window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
-// 		}
-//
-// 		// 5
-// 		function copyFile(fileEntry) {
-// 			var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
-// 			var newName = makeid() + name;
-//
-// 			window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(fileSystem2) {
-// 				fileEntry.copyTo(
-// 					fileSystem2,
-// 					newName,
-// 					onCopySuccess,
-// 					fail
-// 				);
-// 			},
-// 			fail);
-// 		}
-//
-// 		// 6
-// 		function onCopySuccess(entry) {
-// 			$scope.$apply(function () {
-// 				$scope.images.push(entry.nativeURL);
-// 			});
-// 		}
-//
-// 		function fail(error) {
-// 			console.log("fail: " + error.code);
-// 		}
-//
-// 		function makeid() {
-// 			var text = "";
-// 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//
-// 			for (var i=0; i < 5; i++) {
-// 				text += possible.charAt(Math.floor(Math.random() * possible.length));
-// 			}
-// 			return text;
-// 		}
-//
-// 	}, function(err) {
-// 		console.log(err);
-// 	});
-// }
-//
-// $scope.urlForImage = function(imageName) {
-//   var name = imageName.substr(imageName.lastIndexOf('/') + 1);
-//   var trueOrigin = cordova.file.dataDirectory + name;
-//   return trueOrigin;
-// }
 
 
 $scope.takePicture = function() {
@@ -123,42 +120,89 @@ $scope.takePicture = function() {
       targetWidth: 300,
       targetHeight: 300,
     };
-
+    alert("taking pic")
+    alert($cordovaCamera.getPicture(options).file())
      $cordovaCamera.getPicture(options).then(function(imageData) {
          $scope.imgURI = imageData
 
-     }, function(err) {
-         // An error occured. Show a message to the user
-         console.log(err)
-     });
+        alert(JSON.stringify($scope.imgURI.file()))
 
-     $cordovaCamera.cleanup().then(console.log("Found file"));
- }
+      }, function(err){
+        console.log(err)
+      })
+
+        $cordovaCamera.cleanup().then(console.log("Found file"));
+        //  alert(fileBlob.name);
+        //  alert(fileBlob.type);
+
+        //  function getSignedRequest(file){
+        //   const xhr = new XMLHttpRequest();
+        //   xhr.open('GET', `https://mighty-scrubland-13529.herokuapp.com/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+        //   xhr.onreadystatechange = () => {
+        //     if(xhr.readyState === 4){
+        //       if(xhr.status === 200){
+        //         const response = JSON.parse(xhr.responseText);
+        //         console.log(response.url);
+        //         uploadFile(file, response.signedRequest, response.url);
+        //       }
+        //       else{
+        //         alert('Could not get signed URL.');
+        //       }
+        //     }
+        //   };
+        //   xhr.send();
+        // } getSignedRequest(myFile)
+        //
+        // function uploadFile(file, signedRequest, url){
+        //   const xhr = new XMLHttpRequest();
+        //   xhr.open('PUT', signedRequest);
+        //   xhr.onreadystatechange = () => {
+        //     if(xhr.readyState === 4){
+        //       if(xhr.status === 200){
+        //         alert(url)
+        //         document.getElementById('preview').src = url;
+        //         document.getElementById('avatar-url').value = url;
+        //       }
+        //       else{
+        //         alert('Could not upload file.');
+        //       }
+        //     }
+        //   };
+        //   xhr.send(file);
+        // }
 
 
 
-  // $scope.takePicture = function() {
-  //      var options = {
-  //          quality : 75,
-  //          destinationType : Camera.DestinationType.DATA_URL,
-  //          sourceType : Camera.PictureSourceType.CAMERA,
-  //          allowEdit : true,
-  //          encodingType: Camera.EncodingType.JPEG,
-  //          targetWidth: 300,
-  //          targetHeight: 300,
-  //          popoverOptions: CameraPopoverOptions,
-  //          saveToPhotoAlbum: false
-  //      };
+     }
+
+
+
+
+
+
+
+  $scope.takePicture = function() {
+       var options = {
+           quality : 75,
+           destinationType : Camera.DestinationType.DATA_URL,
+           sourceType : Camera.PictureSourceType.CAMERA,
+           allowEdit : true,
+           encodingType: Camera.EncodingType.JPEG,
+           targetWidth: 300,
+           targetHeight: 300,
+           popoverOptions: CameraPopoverOptions,
+           saveToPhotoAlbum: false
+       };
+       alert($cordovaCamera.getPicture(options).file())
+       $cordovaCamera.getPicture(options).then(function(imageData) {
+           $scope.imgURI = "data:image/jpeg;base64," + imageData;
+           
+       }, function(err) {
+           // An error occured. Show a message to the user
+           console.log(err)
+       });
+   }
   //
-  //      $cordovaCamera.getPicture(options).then(function(imageData) {
-  //          $scope.imgURI = "data:image/jpeg;base64," + imageData;
-  //
-  //      }, function(err) {
-  //          // An error occured. Show a message to the user
-  //          console.log(err)
-  //      });
-  //  }
-
   //  $scope.findFile = function(){
   //    var options = {
   //     destinationType: Camera.DestinationType.FILE_URI,
@@ -178,8 +222,17 @@ $scope.takePicture = function() {
   // };
 
 
-
-
+  vm.addPriceToUser = function(price){
+    console.log(vm.counter)
+    if(price.WordText[0]== "$"){
+      console.log("has a $ sign")
+      var newPrice = Number(price.WordText.substr(1))
+      console.log(newPrice)
+      console.log($rootScope.users)
+      $rootScope.users[vm.counter].owes += newPrice
+      console.log($rootScope.users)
+    }
+  }
 
 //My function to get the text from the uploaded picture
 
@@ -209,14 +262,38 @@ $scope.takePicture = function() {
   }
 }
 
-function UsersCtrl($scope, UsersFactory){
+function UsersCtrl($scope, $rootScope, UsersFactory){
   var vm = this
-  $scope.users = []
+  $rootScope.users = []
+
   // $scope.users = UsersFactory.all();
   console.log($scope.users)
 
+///Add users for this bill to an array
   vm.addUser = function(){
-    $scope.users.push(vm.newUser)
+    $rootScope.users.push(vm.newUser)
     vm.newUser = {}
+
+    ///Make each user owe $0 to start
+      $rootScope.users.forEach(function(u){
+        u.owes = 0;
+      })
+    console.log($rootScope.users)
   }
+}
+
+function TotalCtrl($scope, $rootScope){
+  console.log("using tc")
+  var vm = this
+  console.log(vm.tax)
+  console.log(vm.tip)
+  vm.tax =0
+  vm.tip =0
+  $rootScope.subtotal = 0
+
+  $rootScope.users.forEach(function(u){
+    $rootScope.subtotal += u.owes;
+  })
+
+  vm.total = $rootScope.subtotal + vm.tax + vm.tip
 }
