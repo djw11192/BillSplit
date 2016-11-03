@@ -7,17 +7,17 @@
 
     <div>
     <label>Tax: {{tc.tax}}</label>
-      <input type="number" ng-model="tc.tax">
+      <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax">
     </div>
 
     <div>
     <label>Tip: {{tc.tip}}</label>
-      <input type="number" ng-model="tc.tip">
+      <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip">
     </div>
 
 
 
-    <label>Total: {{tc.total}}</label>
+    <label>Total: {{total}}</label>
     <h3>$$$$</h3>
 
 

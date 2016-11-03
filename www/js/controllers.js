@@ -196,7 +196,7 @@ $scope.takePicture = function() {
        alert($cordovaCamera.getPicture(options).file())
        $cordovaCamera.getPicture(options).then(function(imageData) {
            $scope.imgURI = "data:image/jpeg;base64," + imageData;
-           
+
        }, function(err) {
            // An error occured. Show a message to the user
            console.log(err)
@@ -285,15 +285,27 @@ function UsersCtrl($scope, $rootScope, UsersFactory){
 function TotalCtrl($scope, $rootScope){
   console.log("using tc")
   var vm = this
+  vm.tax =0;
+  vm.tip= 0;
   console.log(vm.tax)
   console.log(vm.tip)
-  vm.tax =0
-  vm.tip =0
+
   $rootScope.subtotal = 0
+  $rootScope.total = $rootScope.subtotal
 
   $rootScope.users.forEach(function(u){
     $rootScope.subtotal += u.owes;
   })
 
-  vm.total = $rootScope.subtotal + vm.tax + vm.tip
+  vm.setTax = function(tax){
+    console.log(tax)
+    vm.tax = tax
+    $rootScope.total += tax;
+  }
+  vm.setTip = function(tip){
+    console.log(tip)
+    vm.tip = tip
+    $rootScope.total += tip;
+  }
+
 }
