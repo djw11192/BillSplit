@@ -6,18 +6,18 @@
     </div>
 
     <div>
-    <label>Tax: {{tc.tax}}</label>
-      <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax">
+    <label>Tax: {{tax}}</label>
+      <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0">
     </div>
 
     <div>
-    <label>Tip: {{tc.tip}}</label>
-      <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip">
+    <label>Tip: {{tip}}</label>
+      <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0">
     </div>
 
 
 
-    <label>Total: {{total}}</label>
+    <label ng-show="tax !== undefined && tip !== undefined">Total: {{tax + subtotal + ((tax+subtotal)*tip)}}</label>
     <h3>$$$$</h3>
 
 

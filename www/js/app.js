@@ -107,6 +107,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         controller: 'TotalCtrl as tc'
       }
     }
+  })
+
+  .state('tab.billsplit', {
+    url: '/billsplit',
+    views: {
+      'tab-billsplit': {
+        templateUrl: 'templates/tab-billsplit.html',
+        controller: 'BillCtrl as bc'
+      }
+    }
   });
 
 

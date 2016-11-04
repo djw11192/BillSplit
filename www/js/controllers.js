@@ -4,6 +4,7 @@ angular.module('starter.controllers', [])
 .controller('CameraCtrl', CameraCtrl)
 .controller('UsersCtrl', UsersCtrl)
 .controller('TotalCtrl', TotalCtrl)
+.controller('BillCtrl', BillCtrl)
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
@@ -285,8 +286,8 @@ function UsersCtrl($scope, $rootScope, UsersFactory){
 function TotalCtrl($scope, $rootScope){
   console.log("using tc")
   var vm = this
-  vm.tax =0;
-  vm.tip= 0;
+  var tip =
+  // vm.tax =0;
   console.log(vm.tax)
   console.log(vm.tip)
 
@@ -297,16 +298,24 @@ function TotalCtrl($scope, $rootScope){
     $rootScope.subtotal += u.owes;
   })
 
+
   vm.setTax = function(tax){
+    $rootScope.total = $rootScope.subtotal
     console.log(tax)
-    vm.tax = tax
-    $rootScope.total += tax;
+    $rootScope.tax = tax
+    // $rootScope.total += vm.tax
   }
   vm.setTip = function(tip){
-    console.log(tip)
-    vm.tip = tip
-    $rootScope.total += ($rootScope.total * tip/100);
+    console.log(vm.tip)
+    $rootScope.tip = tip/100
+    console.log(vm.tip)
   }
 
+}
 
+function BillCtrl($scope, $rootScope){
+  $rootScope.users.forEach(function(u){
+    u.owes = u.owes + (u.owes* $rootScope.tip) + ($rootScope.tax/$rootScope.users.length)
+    console.log(u.owes)
+  })
 }

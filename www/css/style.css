@@ -7,7 +7,7 @@ h1{
 .picContainer{
   height: 90%;
   width: 90%;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
 }
 .receiptContent{
   position: relative;
@@ -17,10 +17,27 @@ h1{
   position: relative;
   vertical-align: central;
 }
-span{
+.receiptText{
   background: white;
   color: red;
 }
 #myImage {
   max-width: 100%
+}
+.enterName{
+  width: 100%;
+  padding: 16px 54px 16px 16px;
+}
+
+input[type="text"]
+{
+    font-size:25px;
+}
+
+input[type="file"] {
+    display: none;
+}
+.username{
+  font-size: 30px;
+  width: 100%;
 }

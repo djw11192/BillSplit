@@ -1,24 +1,25 @@
 <ion-view view-title="Dashboard">
-  <ion-content class="padding">
+  <ion-content class="text-center padding">
     <!-- angular $watch on this value, to trigger file upload... -->
-    <input type="file" ng-model="cc.files" file-change="cc.fileInputChanged($event, cc.files)">
-    <h2 class="text-center">Upload your Receipt</h2>
-    {{ cc.uploadedPhotoUrl }}
+    <h2 ng-hide="cc.uploadedPhotoUrl" class="text-center">Upload your Receipt</h2>
+    <!-- {{ cc.uploadedPhotoUrl }} -->
 
     <!-- <img id="myImage" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}"> -->
     <!-- <img ng-hide="{{cc.uploadedPhotoUrl}}" ng-src="http://placehold.it/300x300"> -->
-    <button class="button" ng-click="takePicture()">Take Picture</button>
-    <p ng-show="imgURI !== undefined">{{imgURI}}</p>
-    <p ng-show="imgURI !== undefined">{{data}}</p>
-    <h2 ng-if="users[cc.counter]">What did {{users[cc.counter].name}} Order?</h2>
+    <!-- <button class="button" ng-click="takePicture()">Take Picture</button> -->
+    <!-- <p ng-show="imgURI !== undefined">{{imgURI}}</p> -->
+    <!-- <p ng-show="imgURI !== undefined">{{data}}</p> -->
+    <h2 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">What did {{users[cc.counter].name}} Order?</h2>
 
-    <p ng-if="users[cc.counter]">{{users[cc.counter].owes}}</p>
-    <button ng-show="users[cc.counter]" ng-click="cc.nextUser()">Next</button>
-    <button ng-hide="users[cc.counter]" ui-sref="tab.total">Continue</button>
+    <h3 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">(Jake owes: ${{users[cc.counter].owes}})</h3>
+
+    <button class="button icon-right ion-chevron-right button-calm" ng-show="users[cc.counter] && cc.uploadedPhotoUrl" ng-click="cc.nextUser()">Next</button>
 
 
 
-    <form class="form" ng-submit="cc.getPic()">
+
+
+    <!-- <form class="form" ng-submit="cc.getPic()">
       <div>
 
       </div>
@@ -27,16 +28,21 @@
     <div>
       <input type="submit" class="btn btn-default" value="Upload Receipt">
     </div>
-  </form>
+  </form> -->
 
   <input type="text" id="avatar-url">
 
   <div class="picContainer text-center">
     <div class="receiptContent">
       <img id="myImage"class="receiptImg" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}" class="receipt" id="preview">
-      <span ng-click="cc.addPriceToUser({{word}})" ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
+      <span class="receiptText" ng-click="cc.addPriceToUser({{word}})" ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
   </div>
 </div>
+<label class="button button-positive username">
+  <input type="file" ng-model="cc.files" file-change="cc.fileInputChanged($event, cc.files)" class="button ion-camera">
+  Camera <span class="ion-camera"></span>
+</label>
+<button class="button button-energized username" ng-hide="users[cc.counter]" ui-sref="tab.total">Continue</button>
 
 
 
