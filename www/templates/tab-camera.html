@@ -1,4 +1,4 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Your Bill">
   <ion-content class="text-center padding">
     <!-- angular $watch on this value, to trigger file upload... -->
     <h2 ng-hide="cc.uploadedPhotoUrl" class="text-center">Upload your Receipt</h2>
@@ -11,7 +11,7 @@
     <!-- <p ng-show="imgURI !== undefined">{{data}}</p> -->
     <h2 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">What did {{users[cc.counter].name}} Order?</h2>
 
-    <h3 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">(Jake owes: ${{users[cc.counter].owes}})</h3>
+    <h3 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">({{users[cc.counter].name}} owes: ${{users[cc.counter].owes}})</h3>
 
     <button class="button icon-right ion-chevron-right button-calm" ng-show="users[cc.counter] && cc.uploadedPhotoUrl" ng-click="cc.nextUser()">Next</button>
 

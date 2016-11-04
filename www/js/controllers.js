@@ -307,7 +307,7 @@ function TotalCtrl($scope, $rootScope){
   }
   vm.setTip = function(tip){
     console.log(vm.tip)
-    $rootScope.tip = tip/100
+    $rootScope.tip = (tip/100)
     console.log(vm.tip)
   }
 

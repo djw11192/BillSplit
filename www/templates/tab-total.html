@@ -1,28 +1,33 @@
 <ion-view view-title="Total">
   <ion-content>
-    <div>
-    <label>Subtotal: </label>
-      <h3>{{subtotal}}</h3>
-    </div>
+    <ion-list>
+      <ion-item type="item-text-wrap text-center username">
 
-    <div>
-    <label>Tax: {{tax}}</label>
-      <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0">
-    </div>
+          <h3 class="subtotal">Subtotal: ${{subtotal}}</h3>
 
-    <div>
-    <label>Tip: {{tip}}</label>
-      <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0">
-    </div>
+      </ion-item>
+
+      <ion-item class="row" type="item-text-wrap">
+          <span class="taxItem">Tax: </span><input class="taxInput" align="right" ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0"><span ng-show="tax !== undefined">${{tax}}</span>
+          <!-- <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0"> -->
+      </ion-item>
+
+      <ion-item class="row" type="item-text-wrap">
+        <!-- <ul class="list">
+          <li ng-show="tip !== undefined" class="username">Tip: {{tip*100}}% = ${{tip*(tax+subtotal)}} </li>
+          <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0">
+        </ul> -->
+        <span class="tipItem">Tip: </span><input class="tipInput"align="right" ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0"><p ng-show="tip !== undefined">{{tip*100 | number:2}}% = ${{tip*(tax+subtotal) | number:2}}</p>
+      </ion-item>
+
+      <h3 class="tipItem" ng-show="tax !== undefined && tip !== undefined">Total: ${{tax + subtotal + ((tax+subtotal)*tip) | number:2}}</h3>
+      <h3 class="tipItem" ng-hide="tax !== undefined && tip !== undefined">Total: <span class="red">enter tax and tip</span></h3>
+
+      <button ng-show="tax !== undefined && tip !== undefined" class="button button-full button-positive" ui-sref="tab.billsplit">Next</button>
 
 
 
-    <label ng-show="tax !== undefined && tip !== undefined">Total: {{tax + subtotal + ((tax+subtotal)*tip)}}</label>
-    <h3>$$$$</h3>
 
-
-
-
-
+    </ion-list>
   </ion-content>
 </ion-view>

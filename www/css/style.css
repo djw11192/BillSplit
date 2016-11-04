@@ -33,6 +33,10 @@ input[type="text"]
 {
     font-size:25px;
 }
+input[type="number"]
+{
+    font-size:20px;
+}
 
 input[type="file"] {
     display: none;
@@ -40,4 +44,16 @@ input[type="file"] {
 .username{
   font-size: 30px;
   width: 100%;
+}
+.red{
+  color: red;
+}
+.tipItem, .taxItem{
+  margin-left: 200px;
+}
+.tipInput, .taxInput{
+  margin: 0px 200px 0px 200px;
+}
+.subtotal{
+  padding-left: 200px;
 }
