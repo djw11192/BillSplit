@@ -54,6 +54,13 @@ input[type="file"] {
 .tipInput, .taxInput{
   margin: 0px 200px 0px 200px;
 }
-.subtotal{
+.subtotal, .padding-left{
   padding-left: 200px;
+}
+.priceClicked{
+  color: black;
+  text-decoration: line-through;
+}
+.listFont{
+  font-size: 25px;
 }

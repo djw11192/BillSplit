@@ -33,6 +33,7 @@ angular.module('starter.controllers', [])
 
 function CameraCtrl($scope, $rootScope, $cordovaCamera, CameraFactory){
   var vm = this
+  vm.loading = false;
 
   /////////Counter for users//////
   vm.counter = 0
@@ -44,6 +45,9 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, CameraFactory){
   console.log("CameraCtrl")
 
   vm.fileInputChanged = function(evt, files) {
+    vm.loading = true;
+    console.log(vm.loading)
+
     var files = evt.target.files;
     file = files[0];
 
@@ -96,7 +100,9 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, CameraFactory){
                })
              })
              console.log(vm.singleWords)
-             alert(vm.singleWords[0].WordText)
+             vm.loading = false;
+             console.log("got the picture")
+            //  alert(vm.singleWords[0].WordText)
            },
            function(err){
              console.log(err)
@@ -224,6 +230,7 @@ $scope.takePicture = function() {
 
 
   vm.addPriceToUser = function(price){
+    vm.activeClass = price
     console.log(vm.counter)
     if(price.WordText[0]== "$"){
       console.log("has a $ sign")
@@ -232,8 +239,13 @@ $scope.takePicture = function() {
       console.log($rootScope.users)
       $rootScope.users[vm.counter].owes += newPrice
       console.log($rootScope.users)
+    } else{
+      var newPrice = Number(price.WordText)
+      $rootScope.users[vm.counter].owes += newPrice
+
     }
   }
+  
 
 //My function to get the text from the uploaded picture
 
@@ -241,6 +253,7 @@ $scope.takePicture = function() {
     console.log("getting pic")
     CameraFactory.create()
       .then(function(data){
+
         // console.log(data.data.ParsedResults[0].TextOverlay.Lines)
         var allWords = []
         vm.singleWords =[]
@@ -254,6 +267,7 @@ $scope.takePicture = function() {
           })
         })
         console.log(vm.singleWords)
+
       },
       function(err){
         console.log(err)

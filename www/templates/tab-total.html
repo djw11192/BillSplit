@@ -3,12 +3,12 @@
     <ion-list>
       <ion-item type="item-text-wrap text-center username">
 
-          <h3 class="subtotal">Subtotal: ${{subtotal}}</h3>
+          <h3 class="subtotal listFont">Subtotal: ${{subtotal}}</h3>
 
       </ion-item>
 
       <ion-item class="row" type="item-text-wrap">
-          <span class="taxItem">Tax: </span><input class="taxInput" align="right" ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0"><span ng-show="tax !== undefined">${{tax}}</span>
+          <span class="taxItem">Tax: </span><input class="taxInput text-center" align="right" ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0"><span ng-show="tax !== undefined">${{tax | number:2}}</span>
           <!-- <input ng-change="tc.setTax(tc.tax)" type="number" ng-model="tc.tax" placeholder="0"> -->
       </ion-item>
 
@@ -17,7 +17,7 @@
           <li ng-show="tip !== undefined" class="username">Tip: {{tip*100}}% = ${{tip*(tax+subtotal)}} </li>
           <input ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0">
         </ul> -->
-        <span class="tipItem">Tip: </span><input class="tipInput"align="right" ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0"><p ng-show="tip !== undefined">{{tip*100 | number:2}}% = ${{tip*(tax+subtotal) | number:2}}</p>
+        <span class="tipItem">Tip: </span><input class="tipInput text-center"align="right" ng-change="tc.setTip(tc.tip)"type="number" ng-model="tc.tip" placeholder="0"><p ng-show="tip !== undefined">{{tip*100 | number:2}}% = ${{tip*(tax+subtotal) | number:2}}</p>
       </ion-item>
 
       <h3 class="tipItem" ng-show="tax !== undefined && tip !== undefined">Total: ${{tax + subtotal + ((tax+subtotal)*tip) | number:2}}</h3>
