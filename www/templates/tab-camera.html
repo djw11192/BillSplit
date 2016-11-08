@@ -1,5 +1,5 @@
 <ion-view view-title="Your Bill">
-  <ion-content class="text-center padding">
+  <ion-content class="text-center padding has-footer">
     <!-- angular $watch on this value, to trigger file upload... -->
     <h2 ng-hide="cc.uploadedPhotoUrl" class="text-center">Upload your Receipt</h2>
     <!-- {{ cc.uploadedPhotoUrl }} -->
@@ -9,11 +9,11 @@
     <!-- <button class="button" ng-click="takePicture()">Take Picture</button> -->
     <!-- <p ng-show="imgURI !== undefined">{{imgURI}}</p> -->
     <!-- <p ng-show="imgURI !== undefined">{{data}}</p> -->
-    <h2 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">What did {{users[cc.counter].name}} Order?</h2>
+    <h2 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">What did {{users[cc.counter].name}} Order?</h2>
 
-    <h3 class="text-center" ng-if="users[cc.counter] && cc.uploadedPhotoUrl">({{users[cc.counter].name}} owes: ${{users[cc.counter].owes | number:2}})</h3>
+    <h3 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">({{users[cc.counter].name}} owes: ${{users[cc.counter].owes | number:2}})</h3>
 
-    <button class="button icon-right ion-chevron-right button-calm" ng-show="users[cc.counter+1] && cc.uploadedPhotoUrl" ng-click="cc.nextUser()">Next</button>
+    <button class="button icon-right ion-chevron-right button-calm" ng-show="users[cc.counter+1] && cc.imageUrl" ng-click="cc.nextUser()">Next</button>
     <button class="button icon-right ion-chevron-right button-calm" ng-hide="users[cc.counter+1]" ui-sref="tab.total" ng-click="cc.nextUser()">Next</button>
 
 
@@ -37,18 +37,22 @@
 
   <div class="picContainer text-center">
     <div class="receiptContent">
-      <img id="myImage"class="receiptImg" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}" class="receipt" id="preview">
+      <img id="myImage"class="receiptImg" ng-if="cc.imageUrl" ng-src="{{ cc.imageUrl }}" class="receipt" id="preview">
       <span class="receiptText" ng-click="cc.addPriceToUser({{word}})"  ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
   </div>
 </div>
-<label class="button button-positive username">
+<!-- <label class="button button-positive username">
   <input type="file" ng-model="cc.files" file-change="cc.fileInputChanged($event, cc.files)" class="button ion-camera">
   Camera <span class="ion-camera"></span>
-</label>
+</label> -->
 <!-- <button class="button button-energized username" ng-hide="users[cc.counter]" ui-sref="tab.total">Continue</button> -->
 
 
 
 
   </ion-content>
+
+  <ion-footer-bar align-title="left" class="bar-assertive">
+    <button ng-click="cc.selectPhoto()" class="button button-full button-positive">Upload <span class="ion-camera"></span></button>
+  </ion-footer-bar>
 </ion-view>

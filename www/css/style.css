@@ -64,3 +64,11 @@ input[type="file"] {
 .listFont{
   font-size: 25px;
 }
+ion-footer-bar {
+  padding:0!important
+}
+ion-footer-bar button {
+  margin: 0!important;
+  border-radius: 0!important;
+  font-size: 18px!important;
+}
