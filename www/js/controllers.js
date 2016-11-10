@@ -202,7 +202,11 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
          })
          allWords.forEach(function(l){
            l.forEach(function(attributes){
+             if(isNaN(attributes.WordText)){
+               console.log(attributes.WordText)
+             } else{
              vm.singleWords.push(attributes)
+            }
            })
          })
          console.log(vm.singleWords)

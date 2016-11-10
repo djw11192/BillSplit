@@ -38,7 +38,7 @@
   <div class="picContainer text-center">
     <div class="receiptContent">
       <img id="myImage"class="receiptImg" ng-if="cc.imageUrl" ng-src="{{ cc.imageUrl }}" class="receipt" id="preview">
-      <span class="receiptText" ng-click="cc.addPriceToUser({{word}})"  ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</span>
+      <button class="receiptText" ng-click="cc.addPriceToUser({{word}})"  ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</button>
   </div>
 </div>
 <!-- <label class="button button-positive username">
