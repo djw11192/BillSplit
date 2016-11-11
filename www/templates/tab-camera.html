@@ -1,42 +1,22 @@
 <ion-view view-title="Your Bill">
   <ion-content class="text-center padding has-footer">
-    <!-- angular $watch on this value, to trigger file upload... -->
-    <h2 ng-hide="cc.uploadedPhotoUrl" class="text-center">Upload your Receipt</h2>
-    <!-- {{ cc.uploadedPhotoUrl }} -->
 
-    <!-- <img id="myImage" ng-if="cc.uploadedPhotoUrl" ng-src="{{ cc.uploadedPhotoUrl }}"> -->
-    <!-- <img ng-hide="{{cc.uploadedPhotoUrl}}" ng-src="http://placehold.it/300x300"> -->
-    <!-- <button class="button" ng-click="takePicture()">Take Picture</button> -->
-    <!-- <p ng-show="imgURI !== undefined">{{imgURI}}</p> -->
-    <!-- <p ng-show="imgURI !== undefined">{{data}}</p> -->
-    <h2 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">What did {{users[cc.counter].name}} Order?</h2>
+    <h2 ng-hide="cc.imageUrl" class="text-center">Upload your Receipt</h2>
 
-    <h3 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">({{users[cc.counter].name}} owes: ${{users[cc.counter].owes | number:2}})</h3>
+    <h2 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">{{users[cc.counter].name}} owes: ${{users[cc.counter].owes | number:2}}</h2>
 
-    <button class="button icon-right ion-chevron-right button-calm" ng-show="users[cc.counter+1] && cc.imageUrl" ng-click="cc.nextUser()">Next</button>
-    <button class="button icon-right ion-chevron-right button-calm" ng-hide="users[cc.counter+1]" ui-sref="tab.total" ng-click="cc.nextUser()">Next</button>
+    <h3 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">(click on prices to add amount)</h3>
 
+    <button class="button button-full icon-right ion-chevron-right button-calm" ng-show="users[cc.counter+1] && cc.imageUrl" ng-click="cc.nextUser()">Next</button>
+    <button class="button button-full icon-right ion-chevron-right button-calm" ng-hide="users[cc.counter+1]" ui-sref="tab.total" ng-click="cc.nextUser()">Next</button>
 
-
-
-
-    <!-- <form class="form" ng-submit="cc.getPic()">
-      <div>
-
-      </div>
-
-
-    <div>
-      <input type="submit" class="btn btn-default" value="Upload Receipt">
-    </div>
-  </form> -->
 
   <input type="text" id="avatar-url">
 
   <ion-spinner ng-if="cc.loading"></ion-spinner>
 
   <div class="picContainer text-center">
-    <div class="receiptContent">
+    <div class="receiptContent text-center">
       <img id="myImage"class="receiptImg" ng-if="cc.imageUrl" ng-src="{{ cc.imageUrl }}" class="receipt" id="preview">
       <button class="receiptText" ng-click="cc.addPriceToUser({{word}})"  ng-style="{'position': 'absolute', 'left':{{word.Left}}+'px', 'top': {{word.Top}}+'px', 'text-align': 'center'}"ng-repeat="word in cc.singleWords">{{word.WordText}}</button>
   </div>
@@ -53,6 +33,6 @@
   </ion-content>
 
   <ion-footer-bar align-title="left" class="bar-assertive">
-    <button ng-click="cc.selectPhoto()" class="button button-full button-positive">Upload <span class="ion-camera"></span></button>
+    <button ng-click="cc.selectPhoto()" class="button button-full button-positive camera">Upload <span class="ion-camera"></span></button>
   </ion-footer-bar>
 </ion-view>

@@ -1,26 +1,19 @@
 <ion-view view-title="Users">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-icon-right" ng-repeat="user in users" type="item-text-wrap">
-        <ul class="list">
-          <li class="text-center username">{{user.name}}</li>
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
+      <ion-item class="removePadding" ng-repeat="user in users" type="item-text-wrap">
+
+          <input class="text-center username" ng-model="user.name" placeholder="name">
+        <!-- <ion-option-button class="button-assertive" ng-click="remove(chat)">
           Delete
-        </ion-option-button>
-      </ul>
+        </ion-option-button> -->
       </ion-item>
     </ion-list>
     <ion-list>
-      <ion-item>
-        <ul class="list">
-        <li><input class="enterName text-center" size="50" type="text" placeholder="Name" ng-model="uc.newUser.name"></li>
-      </ul>
-
-      </ion-item>
       <button class="button button-full button-positive" ng-click="uc.addUser()">
         Add Eater
       </button>
-      <button ui-sref="tab.camera" class="button button-full button-energized">Continue</button>
+      <button ui-sref="tab.camera" ng-click="uc.checkUsers()" class="button button-full button-energized">Continue</button>
       </button>
     </ion-list>
   </ion-content>

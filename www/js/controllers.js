@@ -38,6 +38,7 @@ angular.module('starter.controllers', [])
 
 function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, CameraFactory) {
   var vm = this
+  console.log($rootScope.users)
 
   vm.counter = 0
 
@@ -48,7 +49,6 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
 //The function below occurs when a user clicks/taps on a price.  It will add that value to what a specified user "owes"
   vm.addPriceToUser = function(price){
-    vm.activeClass = price
     console.log(vm.counter)
     if(price.WordText[0]== "$"){
       console.log("has a $ sign")
@@ -109,6 +109,7 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
     $cordovaCamera.getPicture(options)
       .then(function(imagePath) {
+        vm.loading=true;
         getSignedRequest(imagePath)
       })
   }
@@ -202,8 +203,9 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
          })
          allWords.forEach(function(l){
            l.forEach(function(attributes){
-             if(isNaN(attributes.WordText)){
-               console.log(attributes.WordText)
+             var somePrice = attributes.WordText.substr(1)
+             if(isNaN(somePrice) || attributes.WordText.length<2){
+               console.log(attributes)
              } else{
              vm.singleWords.push(attributes)
             }
@@ -388,23 +390,31 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
 function UsersCtrl($scope, $rootScope, UsersFactory){
   var vm = this
-  $rootScope.users = []
+  $rootScope.users = [{
+    name: '',
+    owes: 0
+  }]
 
-  // $scope.users = UsersFactory.all();
-  console.log($scope.users)
 
-///Add users for this bill to an array
+///Add users for this bill to users array
   vm.addUser = function(){
-    $rootScope.users.push(vm.newUser)
-    vm.newUser = {}
+    var user = {name: '', owes: 0}
+    $rootScope.users.push(user)
+  }
 
-    ///Make each user owe $0 to start
-      $rootScope.users.forEach(function(u){
-        u.owes = 0;
-      })
+  console.log($rootScope.users)
+
+  vm.checkUsers = function(){
+    $rootScope.users.forEach(function(u){
+      if(u.name == ''){
+        var index = $rootScope.users.indexOf(u)
+        $rootScope.users.splice(index,1)
+      }
+    })
     console.log($rootScope.users)
   }
 }
+
 
 function TotalCtrl($scope, $rootScope){
   console.log("using tc")

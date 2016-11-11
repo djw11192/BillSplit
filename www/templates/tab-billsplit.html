@@ -3,7 +3,7 @@
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="user in users" type="item-text-wrap">
         <ul class="list">
-          <li class="padding-left listFont">{{user.name}} <span>${{user.owes | number:2}}</span></li>
+          <li class="padding-left listFont">{{user.name}}: <span>${{user.owes | number:2}}</span></li>
         </ul>
       </ion-item>
       <ion-item>
