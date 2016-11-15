@@ -54,6 +54,11 @@ input[type="file"] {
 .tipInput, .taxInput{
   width: 30%;
 }
+.other{
+  width: 10%;
+  display: inline;
+  margin-top: 5px;
+}
 
 .priceClicked{
   color: black;
@@ -68,7 +73,7 @@ ion-footer-bar {
 ion-footer-bar button {
   margin: 0!important;
   border-radius: 0!important;
-  font-size: 18px!important;
+  font-size: 20px!important;
 }
 .removePadding{
   padding: 0px!important;

@@ -3,6 +3,7 @@
   "version": "1.1.1",
   "description": "BillSplit: An Ionic project",
   "dependencies": {
+    "@ionic/cloud-angular": "^0.7.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "gulp": "^3.5.6",

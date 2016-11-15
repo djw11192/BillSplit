@@ -1,0 +1,6 @@
+{
+    "name": "BillSplit",
+    "description": "An Ionic app that allows users to take pictures of receipts and split the costs among friends",
+    "repository": "https://github.com/djw11192/BillSplit",
+    "keywords": ["ionic", "bill", "check"]
+}

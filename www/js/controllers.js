@@ -36,17 +36,31 @@ angular.module('starter.controllers', [])
 
 
 
-function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, CameraFactory) {
+function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, $window, CameraFactory) {
+
   var vm = this
-  console.log($rootScope.users)
 
-  vm.counter = 0
-
-  vm.nextUser = function(){
-    vm.counter+=1
+  ///Find out if the device being used is mobile
+  console.log($window.innerWidth)
+  if($window.innerWidth < 500){
+    $scope.mobile = "mobile"
   }
 
 
+  console.log($rootScope.users)
+
+  vm.counter = 0
+  vm.userOwes = 0
+  vm.imageUrl =undefined
+
+  vm.nextUser = function(){
+    $rootScope.users[vm.counter].owes += vm.userOwes
+    vm.counter+=1;
+    vm.userOwes=0
+  }
+  vm.addOther = function(other){
+    vm.userOwes = other
+  }
 //The function below occurs when a user clicks/taps on a price.  It will add that value to what a specified user "owes"
   vm.addPriceToUser = function(price){
     console.log(vm.counter)
@@ -64,36 +78,9 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
     }
   }
 
-///This function creates an array with all the attributes we need for each piece of text on the receipt (positioning and actual text)
-  // vm.getPic = function(){
-  //   console.log("getting pic")
-  //   CameraFactory.create()
-  //     .then(function(data){
-  //
-  //       var allWords = []
-  //       vm.singleWords =[]
-  //       var lines = data.data.ParsedResults[0].TextOverlay.Lines
-  //       lines.forEach(function(line){
-  //         allWords.push(line.Words)
-  //       })
-  //       allWords.forEach(function(l){
-  //         l.forEach(function(attributes){
-  //           vm.singleWords.push(attributes)
-  //         })
-  //       })
-  //       console.log(vm.singleWords)
-  //
-  //     },
-  //     function(err){
-  //       console.log(err)
-  //     }
-  //   )
-  //
-  // }
 
   vm.title = ""
 
-  // adjust these values to taste:
   vm.targetWidth = 320
   vm.targetHeight = 568
   vm.imageQuality = 80
@@ -245,6 +232,94 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
       })
     }
   }
+
+  //////////////////////This uploads the photo if someone views the site as a web version //////////////////////
+    vm.fileInputChanged = function(evt, files) {
+      vm.loading = true;
+      console.log(vm.loading)
+
+      var files = evt.target.files;
+      file = files[0];
+
+      console.log(file)
+
+      if(file == null){
+        return alert('No file selected.');
+      }
+      vm.getSignedRequest(file);
+    }
+      vm.fileInputChanged = function(evt, files) {
+        vm.loading = true;
+        console.log(vm.loading)
+
+        var files = evt.target.files;
+        file = files[0];
+
+        console.log(file)
+
+        if(file == null){
+          return alert('No file selected.');
+        }
+        vm.getSignedRequest(file);
+      }
+
+
+      vm.getSignedRequest = function(file){
+       var xhr = new XMLHttpRequest();
+       xhr.open('GET', `https://mighty-scrubland-13529.herokuapp.com/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+       xhr.onreadystatechange = () => {
+         if(xhr.readyState === 4){
+           if(xhr.status === 200){
+             var response = JSON.parse(xhr.responseText);
+             console.log(response);
+             vm.uploadFile(file, response.signedRequest, response.url);
+           }
+           else{
+             alert('Could not get signed URL.');
+           }
+         }
+       };
+       xhr.send();
+     }
+     vm.uploadFile = function(file, signedRequest, url){
+       var xhr = new XMLHttpRequest();
+       xhr.open('PUT', signedRequest);
+       xhr.onreadystatechange = () => {
+         if(xhr.readyState === 4){
+           if(xhr.status === 200){
+             vm.imageUrl = url
+             $scope.$apply()
+             CameraFactory.create(vm.imageUrl)
+               .then(function(data){
+                 // console.log(data.data.ParsedResults[0].TextOverlay.Lines)
+                 var allWords = []
+                 vm.singleWords =[]
+                 var lines = data.data.ParsedResults[0].TextOverlay.Lines
+                 lines.forEach(function(line){
+                   allWords.push(line.Words)
+                 })
+                 allWords.forEach(function(l){
+                   l.forEach(function(attributes){
+                     vm.singleWords.push(attributes)
+                   })
+                 })
+                 console.log(vm.singleWords)
+                 vm.loading = false;
+                 console.log("got the picture")
+                //  alert(vm.singleWords[0].WordText)
+               },
+               function(err){
+                 console.log(err)
+               }
+             )
+           }
+           else{
+             alert('Could not upload file.');
+           }
+         }
+       };
+       xhr.send(file);
+     }
 }
 
 
@@ -388,7 +463,8 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 //   }
 // }
 
-function UsersCtrl($scope, $rootScope, UsersFactory){
+function UsersCtrl($scope, $rootScope, $window, $state, $ionicHistory, UsersFactory){
+
   var vm = this
   $rootScope.users = [{
     name: '',
@@ -401,6 +477,9 @@ function UsersCtrl($scope, $rootScope, UsersFactory){
     var user = {name: '', owes: 0}
     $rootScope.users.push(user)
   }
+  $rootScope.users.forEach(function(u){
+     u.owes = 0;
+   })
 
   console.log($rootScope.users)
 
@@ -412,6 +491,7 @@ function UsersCtrl($scope, $rootScope, UsersFactory){
       }
     })
     console.log($rootScope.users)
+    $state.go('tab.camera', {}, {reload: true})
   }
 }
 
@@ -446,9 +526,15 @@ function TotalCtrl($scope, $rootScope){
 
 }
 
-function BillCtrl($scope, $rootScope){
+function BillCtrl($scope, $rootScope, $state, $window){
+  var vm = this
   $rootScope.users.forEach(function(u){
     u.owes = u.owes + (u.owes* $rootScope.tip) + ($rootScope.tax/$rootScope.users.length)
     console.log(u.owes)
   })
+  $rootScope.reset = function(){
+    $window.location.reload()
+    $state.go('tab.users', {}, {reload: true})
+
+  }
 }
