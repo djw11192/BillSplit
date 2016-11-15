@@ -36,8 +36,12 @@ angular.module('starter.controllers', [])
 
 
 
-function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, $window, CameraFactory) {
+function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, $window, $state, CameraFactory) {
 
+  //In case someone is viewing on web and hits refresh, go back to users page
+  if(!$rootScope.users){
+    $state.go('tab.users', {}, {reload: true})
+  }
   var vm = this
 
   ///Find out if the device being used is mobile
@@ -465,6 +469,7 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
 function UsersCtrl($scope, $rootScope, $window, $state, $ionicHistory, UsersFactory){
 
+
   var vm = this
   $rootScope.users = [{
     name: '',
@@ -496,7 +501,13 @@ function UsersCtrl($scope, $rootScope, $window, $state, $ionicHistory, UsersFact
 }
 
 
-function TotalCtrl($scope, $rootScope){
+function TotalCtrl($scope, $rootScope, $state){
+
+  //In case someone is viewing on web and hits refresh, go back to users page
+  if(!$rootScope.users){
+    $state.go('tab.users', {}, {reload: true})
+  }
+
   console.log("using tc")
   var vm = this
   var tip =
@@ -527,6 +538,12 @@ function TotalCtrl($scope, $rootScope){
 }
 
 function BillCtrl($scope, $rootScope, $state, $window){
+
+  //In case someone is viewing on web and hits refresh, go back to users page
+  if(!$rootScope.users){
+    $state.go('tab.users', {}, {reload: true})
+  }
+
   var vm = this
   $rootScope.users.forEach(function(u){
     u.owes = u.owes + (u.owes* $rootScope.tip) + ($rootScope.tax/$rootScope.users.length)
