@@ -38,10 +38,7 @@ angular.module('starter.controllers', [])
 
 function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $ionicLoading, $window, $state, CameraFactory) {
 
-  //In case someone is viewing on web and hits refresh, go back to users page
-  if(!$rootScope.users){
-    $state.go('tab.users', {}, {reload: true})
-  }
+
   var vm = this
 
   ///Find out if the device being used is mobile
@@ -55,7 +52,6 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
   vm.counter = 0
   vm.userOwes = 0
-  vm.imageUrl =undefined
 
   vm.nextUser = function(){
     $rootScope.users[vm.counter].owes += vm.userOwes
@@ -87,9 +83,13 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
 
   vm.targetWidth = 320
   vm.targetHeight = 568
-  vm.imageQuality = 80
+  vm.imageQuality = 100
 
   vm.selectPhoto = function() {
+    // navigator.notification.alert("Remember to align sides of receipt with camera frame", afterAlert, "Alert", "Close")
+    //
+    // function afterAlert(){
+
     var options = {
       destinationType: Camera.DestinationType.FILE_URI,
       sourceType: Camera.PictureSourceType.CAMERA,
@@ -103,7 +103,7 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
         vm.loading=true;
         getSignedRequest(imagePath)
       })
-  }
+    }
 
   function getSignedRequest(filePath){
     vm.title = "Getting Permission To Upload"
@@ -324,6 +324,10 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
        };
        xhr.send(file);
      }
+     //In case someone is viewing on web and hits refresh, go back to users page
+     if(!$rootScope.users){
+       $state.go('tab.users', {}, {reload: true})
+     }
 }
 
 
@@ -496,6 +500,7 @@ function UsersCtrl($scope, $rootScope, $window, $state, $ionicHistory, UsersFact
       }
     })
     console.log($rootScope.users)
+    cordova.plugins.Keyboard.close()
     $state.go('tab.camera', {}, {reload: true})
   }
 }

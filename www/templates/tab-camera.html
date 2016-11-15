@@ -3,16 +3,17 @@
 
     <h2 ng-hide="cc.imageUrl" class="text-center">Upload your Receipt</h2>
 
-    <h2 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">{{users[cc.counter].name}} owes: ${{users[cc.counter].owes + cc.userOwes | number:2}}</h2>
+    <h2 class="text-center" ng-if="cc.imageUrl && users[cc.counter]">{{users[cc.counter].name}} owes: ${{users[cc.counter].owes + cc.userOwes | number:2}}</h2>
 
-    <h4 class="text-center" ng-if="users[cc.counter] && cc.imageUrl">(click on prices to add amount)</h4>
-    <div ng-if="users[cc.counter] && cc.imageUrl"class="row text-center">
-      <h4 class="text-center">Miss anything? Add it here: $ </h4><input type="number"ng-model="cc.userOwes"placeholder="0" ng-change="cc.addOther(cc.userOwes)"class="other">
-    </div>
+    <h4 class="text-center" ng-if="cc.imageUrl && users[cc.counter]">(click on prices to add amount)</h4>
+
 
     <button class="button button-full icon-right ion-chevron-right button-calm" ng-show="users[cc.counter+1] && cc.imageUrl" ng-click="cc.nextUser()">Next</button>
     <button class="button button-full icon-right ion-chevron-right button-calm" ng-hide="users[cc.counter+1]" ui-sref="tab.total" ng-click="cc.nextUser()">Next</button>
 
+    <div ng-if="users[cc.counter] && cc.imageUrl"class="row text-center">
+      <h4 class="text-center">Miss anything? Add it here: $ </h4><input type="number"ng-model="cc.userOwes"placeholder="0" ng-change="cc.addOther(cc.userOwes)"class="other">
+    </div>
 
   <input type="text" id="avatar-url">
 
