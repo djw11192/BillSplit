@@ -237,6 +237,42 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
     }
   }
 
+  ////////Sample receipt in case someone is on the web version and just wants to understand the concept
+  vm.sendSample = function(){
+    console.log("sending sample")
+    vm.loading = true;
+    vm.imageUrl = "https://s3.amazonaws.com/billsplit-receipts/large_receipt.jpg"
+    CameraFactory.create(vm.imageUrl)
+      .then(function(data){
+        // console.log(data.data.ParsedResults[0].TextOverlay.Lines)
+        var allWords = []
+        vm.singleWords =[]
+        var lines = data.data.ParsedResults[0].TextOverlay.Lines
+        lines.forEach(function(line){
+          allWords.push(line.Words)
+        })
+        allWords.forEach(function(l){
+          l.forEach(function(attributes){
+            var somePrice = attributes.WordText.substr(1)
+            if(isNaN(somePrice) || attributes.WordText.length<2){
+              console.log(attributes)
+            } else{
+            vm.singleWords.push(attributes)
+           }
+          })
+        })
+        console.log(vm.singleWords)
+        vm.loading = false;
+        console.log("got the picture")
+       //  alert(vm.singleWords[0].WordText)
+      },
+      function(err){
+        console.log(err)
+      }
+    )
+
+  }
+
   //////////////////////This uploads the photo if someone views the site as a web version //////////////////////
     vm.fileInputChanged = function(evt, files) {
       vm.loading = true;
@@ -304,7 +340,12 @@ function CameraCtrl($scope, $rootScope, $cordovaCamera, $cordovaFileTransfer, $i
                  })
                  allWords.forEach(function(l){
                    l.forEach(function(attributes){
+                     var somePrice = attributes.WordText.substr(1)
+                     if(isNaN(somePrice) || attributes.WordText.length<2){
+                       console.log(attributes)
+                     } else{
                      vm.singleWords.push(attributes)
+                    }
                    })
                  })
                  console.log(vm.singleWords)
@@ -501,7 +542,6 @@ function UsersCtrl($scope, $rootScope, $window, $state, $ionicHistory, UsersFact
     })
     console.log($rootScope.users)
     cordova.plugins.Keyboard.close()
-    $state.go('tab.camera', {}, {reload: true})
   }
 }
 
