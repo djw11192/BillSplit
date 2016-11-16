@@ -5,7 +5,7 @@
 A user enters the names of people eating and takes a picture of a receipt. The prices on the receipt can then be manipulated to add costs to each person eating. Once tax and tip are added, the app displays how much each person eating should pay.
 
 
-![Example Bill](./www/img/bill-example.png =300x600)
+![Example Bill](./www/img/bill-example.png)
 
 ## To use the app
 
